@@ -79,4 +79,4 @@ removeTask: function(state, action){
 ```
 
 ### Preview demo:
-![alt text](/src/assets/todolist.gif)
+![alt text](/src/assets/todolistapp.gif)
