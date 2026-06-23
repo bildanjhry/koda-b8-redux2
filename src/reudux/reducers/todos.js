@@ -66,9 +66,8 @@ const reducers = {
 		const todolistItem = filtered.list.filter((item) => item.id === action.payload.id)[0]
 		const foundListId = filtered.list.findIndex((item) => item.id === action.payload.id)
 		
-
-		filtered.list.splice(foundListId, 1, {...todolistItem, completed:true})
-		
+		// slicing new list
+		filtered.list.splice(foundListId, 1, {...todolistItem, completed:(!todolistItem.completed)})
 		state.todos.splice(foundId, 1, {...state.todos[foundId], list:[...filtered.list]})
 	},
 

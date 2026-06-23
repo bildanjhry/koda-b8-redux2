@@ -47,14 +47,13 @@ export default function TodoList({day }){
 	return (
 		<div className="flex flex-col gap-2 h-fit w-[90%] text-start">
 			<p className="relative -top-0.5">June, 14 2026 - 10:10am</p>
-			<ul className="flex flex-col w-full mt-1 gap-[1px] text-[13px]">
+			<ul className="flex flex-col w-full mt-1 gap-xp text-[13px]">
 				{todos?.list.map((item, index) => (
 					<li 
 					key={index}
 					className="flex items-center gap-2 w-full justify-between">
 						<div className="flex items-center gap-2 w-[80%] justify-start">
 							<input 
-						//	ref={() => {handleClickTarget(item.id)}}
 							onClick={() => handleClickTarget(item.id)}
 							defaultChecked={item.completed}
 							type="checkbox" id={`todo[${day}-${index+1}]`} name={`todo[${index+1}]`}
@@ -70,6 +69,7 @@ export default function TodoList({day }){
 					</li>
 				))}
 			</ul>
+
 			<div className="mt-4">
 				<form onSubmit={handleAddTask}>
 					<input
@@ -81,6 +81,7 @@ export default function TodoList({day }){
 					type="text" />
 				</form>
 			</div>
+
 		</div>		
 	)
 }
