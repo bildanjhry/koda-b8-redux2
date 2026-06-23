@@ -55,18 +55,29 @@ const reducers = {
 	},
 
 	editTask: function(state, action){
+
 		// find index of day
 		const foundId = state.todos.findIndex((item) => item.id === action.payload.dayId)
+
+		// find todolist by day
 		const filtered = state.todos.filter((item) => item.id === action.payload.dayId)[0]
-		const todolistRest = filtered.list.filter((item) => item.id !== action.payload.id)
+
+		// selecting array of list of todo with maches id
 		const todolistItem = filtered.list.filter((item) => item.id === action.payload.id)[0]
-		state.todos.splice(foundId, 1, {...state.todos[foundId], list:[...todolistRest, {...todolistItem, completed:true}]})
+		const foundListId = filtered.list.findIndex((item) => item.id === action.payload.id)
+		
+
+		filtered.list.splice(foundListId, 1, {...todolistItem, completed:true})
+		
+		state.todos.splice(foundId, 1, {...state.todos[foundId], list:[...filtered.list]})
 	},
 
 	removeTask: function(state, action){
 		// find index of day
 		const foundId = state.todos.findIndex((item) => item.id === action.payload.dayId)
 		const filtered = state.todos.filter((item) => item.id === action.payload.dayId)[0]
+
+		// filtering rest of the list that does not matches
 		const todolist = filtered.list.filter((item) => item.id !== action.payload.id)
 		state.todos.splice(foundId, 1, {...state.todos[foundId], list:todolist}) // splicing with new list item
 	}

@@ -1,34 +1,14 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { addTask, editTask, removeTask } from "../../reudux/reducers/todos";
 import { IoMdClose } from "react-icons/io";
 
-
-export default function TodoList({day, expand, setExpand}){
+export default function TodoList({day }){
 	const inputRef = useRef()
-	const listRefs = useRef([]);
 	const dispatch = useDispatch()
 	const todos = useSelector(state => state.todos.todos.filter((item) => item.day === day)[0]
 	)
-	const [data, setData] = useState(JSON.parse(window.localStorage.getItem("todo")) || [])
-	const [listByDay, setListByDay] = useState({})
-	const [changes, setChanges] = useState({
-		day:"",
-		list:[]
-	})
 	const dayId = todos?.id
-
-	// get list by day
-	useEffect(() => {
-		function getListByDay(){
-			const found = data.filter((item) => item.day === day)
-			setListByDay(found[found.length-1])
-		}
-		getListByDay()
-	},[data, setData, day])	
-
-	useEffect(() => {
-	},[expand, setExpand])
 
 	function handleAddTask(e){
 		e.preventDefault()
@@ -61,9 +41,7 @@ export default function TodoList({day, expand, setExpand}){
 	}
 
 	function handleRemoveTask(id){
-		
 		dispatch(removeTask({id, dayId}))
-		//const newList = todos.filter((item) => item.id !== id)
 	}
 
 	return (
@@ -81,7 +59,8 @@ export default function TodoList({day, expand, setExpand}){
 							defaultChecked={item.completed}
 							type="checkbox" id={`todo[${day}-${index+1}]`} name={`todo[${index+1}]`}
 							className="peer accent-(--active-bg) relative border-none"/>
-							<label htmlFor={`todo[${day}-${index+1}]`}className="text-left peer-checked:line-through peer-checked:text-(--text-active) w-full">{item?.name}</label>
+							<label htmlFor={`todo[${day}-${index+1}]`}className="text-left peer-checked:line-through 
+							peer-checked:text-(--text-active) w-full">{item?.name}</label>
 						</div>
 						<button 
 						onClick={() => {handleRemoveTask(item.id)}}
