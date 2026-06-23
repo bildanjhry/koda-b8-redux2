@@ -53,8 +53,18 @@ const reducers = {
 	},
 
 	removeTask: function(state, action){
-		const foundId = state.todos.findIndex((item) => item.id === action.payload.id)
-		state.todos.splice(foundId, 1) // remove by splicing it
+		const foundId = state.todos.findIndex((item) => item.id === action.payload.dayId)
+		
+		
+		const filtered = state.todos.filter((item) => item.id === action.payload.dayId)[0]
+		const todolist = filtered.list.filter((item) => item.id !== action.payload.id)
+		
+		state.todos.splice(foundId, 1, {...state.todos[foundId], list:todolist})
+
+		console.log(JSON.stringify(state.todos[foundId]))
+		
+		//const foundId = state.todos.findIndex((item) => item.id === action.payload.id)
+		//state.todos.splice(foundId, 1) // remove by splicing it
 	}
 }
 
