@@ -37,34 +37,38 @@ const initialState = {
 		date:"",
 		day:"FRIDAY",
 		list:[]
+	},
+	{
+		id:"7s",
+		date:"",
+		day:"SATURDAY",
+		list:[]
 	}
 ]
 }
 
 const reducers = {
 	addTask: function(state, action){
+		// find index of day
 		const foundId = state.todos.findIndex((item) => item.id === action.payload.id)
 		state.todos.splice(foundId, 1, action.payload) // splicing with new item
 	},
 
 	editTask: function(state, action){
-		const filtered = state.todos.filter((item) => item.id !== action.payload.id)
-		state.todos = [...filtered, action.payload.list]
+		// find index of day
+		const foundId = state.todos.findIndex((item) => item.id === action.payload.dayId)
+		const filtered = state.todos.filter((item) => item.id === action.payload.dayId)[0]
+		const todolistRest = filtered.list.filter((item) => item.id !== action.payload.id)
+		const todolistItem = filtered.list.filter((item) => item.id === action.payload.id)[0]
+		state.todos.splice(foundId, 1, {...state.todos[foundId], list:[...todolistRest, {...todolistItem, completed:true}]})
 	},
 
 	removeTask: function(state, action){
+		// find index of day
 		const foundId = state.todos.findIndex((item) => item.id === action.payload.dayId)
-		
-		
 		const filtered = state.todos.filter((item) => item.id === action.payload.dayId)[0]
 		const todolist = filtered.list.filter((item) => item.id !== action.payload.id)
-		
-		state.todos.splice(foundId, 1, {...state.todos[foundId], list:todolist})
-
-		console.log(JSON.stringify(state.todos[foundId]))
-		
-		//const foundId = state.todos.findIndex((item) => item.id === action.payload.id)
-		//state.todos.splice(foundId, 1) // remove by splicing it
+		state.todos.splice(foundId, 1, {...state.todos[foundId], list:todolist}) // splicing with new list item
 	}
 }
 

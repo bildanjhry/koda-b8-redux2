@@ -15,21 +15,6 @@ export default function TodolistDays(){
                   <h1 className="relative top-1.5">{item.day}</h1>
                 </Days>
               ))}
-              {/* <Days  day={"Monday"}>
-                <h1 className="relative top-1.5">MONDAY</h1>
-              </Days>
-              <Days  day={"Tuesday"}>
-                <h1 className="relative top-1.5">TUESDAY</h1>
-              </Days>
-              <Days  day={"Wednesday"}>
-                <h1 className="relative top-1.5">WEDNESSDAY</h1>
-              </Days>  
-              <Days  day={"Thursday"}>
-                <h1 className="relative top-1.5">THURSDAY</h1>
-              </Days>
-              <Days  day={"Friday"}>
-                <h1 className="relative top-1.5">FRIDAY</h1>
-              </Days>                             */}
             </ul>
           </div>
         </div>		

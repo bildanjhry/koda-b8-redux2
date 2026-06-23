@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { addTask, removeTask } from "../../reudux/reducers/todos";
+import { addTask, editTask, removeTask } from "../../reudux/reducers/todos";
 import { IoMdClose } from "react-icons/io";
 
 
@@ -16,6 +16,7 @@ export default function TodoList({day, expand, setExpand}){
 		day:"",
 		list:[]
 	})
+	const dayId = todos?.id
 
 	// get list by day
 	useEffect(() => {
@@ -55,24 +56,19 @@ export default function TodoList({day, expand, setExpand}){
 
 	}
 
-	function handleClickTarget(e){
-		setChanges(prev => {
-			return {
-				day: day,
-				list:[...prev.list, e.target.id]
-			}
-		})
+	function handleClickTarget(id){
+		dispatch(editTask({id, dayId}))
 	}
 
 	function handleRemoveTask(id){
-		const dayId = todos?.id
+		
 		dispatch(removeTask({id, dayId}))
 		//const newList = todos.filter((item) => item.id !== id)
 	}
 
 	return (
 		<div className="flex flex-col gap-2 h-fit w-[90%] text-start">
-			<p className="relative top-[-2px]">June, 14 2026 - 10:10am</p>
+			<p className="relative -top-0.5">June, 14 2026 - 10:10am</p>
 			<ul className="flex flex-col w-full mt-1 gap-[1px] text-[13px]">
 				{todos?.list.map((item, index) => (
 					<li 
@@ -80,8 +76,9 @@ export default function TodoList({day, expand, setExpand}){
 					className="flex items-center gap-2 w-full justify-between">
 						<div className="flex items-center gap-2 w-[80%] justify-start">
 							<input 
-							ref={(e) => (listRefs.current[index] = e)}
-							onClick={handleClickTarget}
+						//	ref={() => {handleClickTarget(item.id)}}
+							onClick={() => handleClickTarget(item.id)}
+							defaultChecked={item.completed}
 							type="checkbox" id={`todo[${day}-${index+1}]`} name={`todo[${index+1}]`}
 							className="peer accent-(--active-bg) relative border-none"/>
 							<label htmlFor={`todo[${day}-${index+1}]`}className="text-left peer-checked:line-through peer-checked:text-(--text-active) w-full">{item?.name}</label>
