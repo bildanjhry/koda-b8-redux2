@@ -1,15 +1,20 @@
 import { useEffect, useRef, useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { addTask } from "../../reudux/reducers/todos";
 
 export default function TodoList({day, expand, setExpand}){
 	const inputRef = useRef()
 	const listRefs = useRef([]);
+	const dispatch = useDispatch()
+	const todos = useSelector(state => state.todos.todos.filter((item) => item.day === day)[0]
+	)
 	const [data, setData] = useState(JSON.parse(window.localStorage.getItem("todo")) || [])
 	const [listByDay, setListByDay] = useState({})
 	const [changes, setChanges] = useState({
 		day:"",
 		list:[]
 	})
-	
+
 	// get list by day
 	useEffect(() => {
 		function getListByDay(){
@@ -31,20 +36,18 @@ export default function TodoList({day, expand, setExpand}){
 			name: task.get("task"),
 			completed: false
 		}
-		if(listByDay?.list.length > 0) newData = [...listByDay.list]
+
+		if(todos?.list.length > 0) newData = [...todos.list]
 		newData.push(newTask)
 
 		const todoList = {
 			day:day,
+			id:todos.id,
+			date: todos.date || new Date().toLocaleDateString(),
 			list:newData
 		}
-		setData([...data, todoList]) // append new data
 
-		// eliminate same data
-		const newDataList = data.filter((item) => item.day !== day)
-
-		newDataList.push(todoList)
-		window.localStorage.setItem("todo", JSON.stringify(newDataList))
+		dispatch(addTask(todoList))
 		inputRef.current.value = ""
 
 	}
@@ -58,11 +61,15 @@ export default function TodoList({day, expand, setExpand}){
 		})
 	}
 
+	function handleRemoveTask(e){
+	
+	}
+
 	return (
 		<div className="flex flex-col gap-2 h-fit">
 			<p className="relative top-[-2px]">June, 14 2026 - 10:10am</p>
 			<ul className="flex flex-col w-full mt-1 gap-[1px] text-[13px]">
-				{listByDay?.list?.map((item, index) => (
+				{todos?.list.map((item, index) => (
 					<li 
 					key={index}
 					className="flex items-center gap-2 justify-start">

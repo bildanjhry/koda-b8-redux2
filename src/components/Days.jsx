@@ -1,8 +1,10 @@
 import { useState, useRef } from "react"
 import { IoMdClose } from "react-icons/io";
 import TodoList from "./todolist/TodoList";
+import { useSelector } from "react-redux";
 
 export default function Days({day, children}){
+	const todolist = useSelector(state => state.todos.todos)
 	const [expand, setExpand] = useState(false)
 	const list = useRef()
 	
@@ -36,7 +38,7 @@ export default function Days({day, children}){
 							</div>
 						}
 					</div>
-					{ expand && <TodoList day={day}  expand={expand} setExpand={setExpand}/> }
+					{ expand && <TodoList day={day} expand={expand} setExpand={setExpand}/> }
 				</button>
 		</li>		
 	)
