@@ -1,43 +1,81 @@
 # Todo List
 
-Program todo list menggunakan React Js dan data akan disimpan di local storage.
+Program Todo List Menggunakan Redux Toolkit dan Redux Persist
 
 ### Tech Stacks:
 - React Js v19x.x.x
 - TailwindCSS v4.X.X
 - Vite v4.x.x
 - Eslint v10.x.x
+- Redux v8.0.0
 
-### Add data to local storage:
-
+### Redux Store Provider:
 
 ```jsx
-	function handleAddTask(e){
-		e.preventDefault()
-		let newData = []
-		const task = new FormData(e.target)
+import { configureStore } from "@reduxjs/toolkit";
+import reducer from "./reducers";
+import persistStore from "redux-persist/es/persistStore";
 
-		const newTask = {
-			name: task.get("task"),
-			completed: false
-		}
-		if(listByDay?.list.length > 0) newData = [...listByDay.list]
-		newData.push(newTask)
+export const store = configureStore({
+  reducer
+})
 
-		const todoList = {
-			day:day,
-			list:newData
-		}
-		setData([...data, todoList]) // append new data
+export const persistor = persistStore(store)
+```
 
-		// eliminate the same data by day
-		const newDataList = data.filter((item) => item.day !== day)
+Fitur dari program ini terdapat 3 aksi yang bisa digunakan, Tambah Task, Edit dan Hapus, semua aksi ini dilakukan dengan reducer action Redux
 
-		newDataList.push(todoList)
-		window.localStorage.setItem("todo", JSON.stringify(newDataList))
-		inputRef.current.value = ""
+### Tambah task:
+```js
+addTask: function(state, action){
+	// find index of day
+	const foundId = state.todos.findIndex((item) => 
+	item.id === action.payload.id)
+	state.todos.splice(foundId, 1, action.payload) // splicing with new item
+}
+```
 
-	}
+### Edit task:
+```js
+editTask: function(state, action){
+
+	// find index of day
+	const foundId = state.todos.findIndex((item) => 
+	item.id === action.payload.dayId)
+
+	// find todolist by day
+	const filtered = state.todos.filter((item) => 
+	item.id === action.payload.dayId)[0]
+
+	// selecting array of list of todo with maches id
+	const todolistItem = filtered.list.filter((item) => 
+	item.id === action.payload.id)[0]
+	const foundListId = filtered.list.findIndex((item) => 
+	item.id === action.payload.id)
+		
+	// slicing new list
+	filtered.list.splice(foundListId, 1, 
+	{...todolistItem, completed:(!todolistItem.completed)})
+	state.todos.splice(foundId, 1, 
+	{...state.todos[foundId], list:[...filtered.list]})
+}
+```
+
+### Hapus Task:
+```js
+removeTask: function(state, action){
+	// find index of day
+	const foundId = state.todos.findIndex((item) => 
+	item.id === action.payload.dayId)
+	const filtered = state.todos.filter((item) => 
+	item.id === action.payload.dayId)[0]
+
+	// filtering rest of the list that does not matches
+	const todolist = filtered.list.filter((item) => 
+	item.id !== action.payload.id)
+	state.todos.splice(foundId, 1, 
+	{...state.todos[foundId], list:todolist}) // splicing with new list item
+}
 ```
 
 ### Preview demo:
